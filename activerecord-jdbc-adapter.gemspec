@@ -9,7 +9,7 @@ Gem::Specification.new do |gem|
   gem.authors = ['Nick Sieger, Ola Bini, Karol Bucek and JRuby contributors']
   gem.email = ['nick@nicksieger.com', 'ola.bini@gmail.com', 'self@kares.org']
   gem.homepage = 'https://github.com/jruby/activerecord-jdbc-adapter'
-  gem.license = "BSD"
+  gem.license = "0BSD"
   gem.summary = 'JDBC adapter for ActiveRecord, for use within JRuby on Rails.'
   gem.description = "" <<
     "AR-JDBC is a database adapter for Rails' ActiveRecord component designed " <<

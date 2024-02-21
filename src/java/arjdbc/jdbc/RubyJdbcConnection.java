@@ -2950,10 +2950,10 @@ public class RubyJdbcConnection extends RubyObject {
             else { // should be a RubyString
                 final ByteList blob = value.asString().getByteList();
                 statement.setBytes(index, blob.bytes());
-                //statement.setBinaryStream(index,
-//                    new ByteArrayInputStream(blob.unsafeBytes(), blob.getBegin(), blob.getRealSize()),
-//                    blob.getRealSize() // length
-//                );
+                statement.setBinaryStream(index,
+                   new ByteArrayInputStream(blob.unsafeBytes(), blob.getBegin(), blob.getRealSize()),
+                   blob.getRealSize() // length
+               );
                 // JDBC 4.0 :
                 //statement.setBlob(index,
                 //    new ByteArrayInputStream(bytes.unsafeBytes(), bytes.getBegin(), bytes.getRealSize())
@@ -2988,7 +2988,7 @@ public class RubyJdbcConnection extends RubyObject {
             }
             else { // should be a RubyString
                 final String clob = value.asString().decodeString();
-                statement.setCharacterStream(index, new StringReader(clob), clob.length());
+                // statement.setCharacterStream(index, new StringReader(clob), clob.length());
                 // JDBC 4.0 :
                 //statement.setClob(index, new StringReader(clob));
             }
