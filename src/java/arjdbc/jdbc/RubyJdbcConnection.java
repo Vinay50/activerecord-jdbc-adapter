@@ -1531,8 +1531,7 @@ public class RubyJdbcConnection extends RubyObject {
         final IRubyObject record, final IRubyObject column, final IRubyObject value)
         throws SQLException {
 
-        final boolean binary = // column.type == :binary
-            column.callMethod(context, "type").toString() == (Object) "binary";
+        final boolean binary = column.callMethod(context, "type").toString().equals("binary");
 
         final IRubyObject recordClass = record.callMethod(context, "class");
         final IRubyObject adapter = recordClass.callMethod(context, "connection");
@@ -1554,6 +1553,14 @@ public class RubyJdbcConnection extends RubyObject {
         );
         return context.getRuntime().newFixnum(count);
     }
+
+
+
+
+
+
+
+
 
     private int updateLobValue(final ThreadContext context,
         final String tableName, final String columnName, final IRubyObject column,
