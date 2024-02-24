@@ -1526,7 +1526,7 @@ public class RubyJdbcConnection extends RubyObject {
         return context.getRuntime().newFixnum(count);
     }
 
-@JRubyMethod(name = "update_lob_value_ruby", required = 3)
+@JRubyMethod(name = "update_lob_value_ruby1", required = 3)
     public IRubyObject update_lob_value(final ThreadContext context,
         final IRubyObject record, final IRubyObject column, final IRubyObject value)
         throws SQLException {
