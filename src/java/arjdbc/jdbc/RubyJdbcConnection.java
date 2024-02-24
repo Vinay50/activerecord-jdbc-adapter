@@ -1526,9 +1526,34 @@ public class RubyJdbcConnection extends RubyObject {
         return context.getRuntime().newFixnum(count);
     }
 
+@JRubyMethod(name = "update_lob_value_ruby", required = 3)
+    public IRubyObject update_lob_value(final ThreadContext context,
+        final IRubyObject record, final IRubyObject column, final IRubyObject value)
+        throws SQLException {
 
+        final boolean binary = column.callMethod(context, "type").toString().equals("binary");
 
+        final IRubyObject recordClass = record.callMethod(context, "class");
+        final IRubyObject adapter = recordClass.callMethod(context, "connection");
 
+        IRubyObject columnName = column.callMethod(context, "name");
+        columnName = adapter.callMethod(context, "quote_column_name", columnName);
+        IRubyObject tableName = recordClass.callMethod(context, "table_name");
+        tableName = adapter.callMethod(context, "quote_table_name", tableName);
+        final IRubyObject idKey = recordClass.callMethod(context, "primary_key"); // 'id'
+        // callMethod(context, "quote", primaryKey);
+        final IRubyObject idColumn = // record.class.columns_hash['id']
+            recordClass.callMethod(context, "columns_hash").callMethod(context, "[]", idKey);
+
+        final IRubyObject id = record.callMethod(context, "id"); // record.id
+
+        final int count = updateLobValue(context,
+            tableName.toString(), columnName.toString(), column,
+            idKey.toString(), id, idColumn, value, binary
+        );
+        return context.getRuntime().newFixnum(count);
+    }
+    
 
 @JRubyMethod(name = "update_lob_values", required = 3)
     public IRubyObject update_lob_value(final ThreadContext context,
@@ -1557,9 +1582,6 @@ public class RubyJdbcConnection extends RubyObject {
         );
         return context.getRuntime().newFixnum(count);
     }
-
-
-
     
     @JRubyMethod(name = "update_lob_value", required = 3)
     public IRubyObject update_lob_value(final ThreadContext context,
