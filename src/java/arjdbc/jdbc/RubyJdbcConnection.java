@@ -1604,7 +1604,7 @@ public class RubyJdbcConnection extends RubyObject {
 
         final IRubyObject id = record.callMethod(context, "id"); // record.id
 
-        final int count = updateLobValue(context,
+        final int count = updateLobValueFromRuby(context,
             tableName.toString(), columnName.toString(), column,
             idKey.toString(), id, idColumn, value, binary
         );
@@ -1612,6 +1612,32 @@ public class RubyJdbcConnection extends RubyObject {
     }
 
     private int updateLobValue(final ThreadContext context,
+        final String tableName, final String columnName, final IRubyObject column,
+        final String idKey, final IRubyObject idValue, final IRubyObject idColumn,
+        final IRubyObject value, final boolean binary) {
+
+        final String sql = "UPDATE "+ tableName +" SET "+ columnName +" = ? WHERE "+ idKey +" = ?" ;
+
+        return withConnection(context, new Callable<Integer>() {
+            public Integer call(final Connection connection) throws SQLException {
+                PreparedStatement statement = null;
+                try {
+                    statement = connection.prepareStatement(sql);
+                    if ( binary ) { // blob
+                        setBlobParameter(context, connection, statement, 1, value, column, Types.BLOB);
+                    }
+                    else { // clob
+                        setClobParameter(context, connection, statement, 1, value, column, Types.CLOB);
+                    }
+                    setStatementParameter(context, context.getRuntime(), connection, statement, 2, idValue, idColumn);
+                    return statement.executeUpdate();
+                }
+                finally { close(statement); }
+            }
+        });
+    }
+
+     private int updateLobValueFromRuby(final ThreadContext context,
         final String tableName, final String columnName, final IRubyObject column,
         final String idKey, final IRubyObject idValue, final IRubyObject idColumn,
         final IRubyObject value, final boolean binary) {
