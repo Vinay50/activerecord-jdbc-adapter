@@ -1627,7 +1627,8 @@ public class RubyJdbcConnection extends RubyObject {
                         setBlobParameter(context, connection, statement, 1, value, column, Types.BLOB);
                     }
                     else { // clob
-                        setClobParameter(context, connection, statement, 1, value, column, Types.CLOB);
+                        // setClobParameter(context, connection, statement, 1, value, column, Types.CLOB);
+                        setBlobParameter(context, connection, statement, 1, value, column, Types.BLOB);
                     }
                     setStatementParameter(context, context.getRuntime(), connection, statement, 2, idValue, idColumn);
                     return statement.executeUpdate();
